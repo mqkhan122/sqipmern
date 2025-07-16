@@ -1,8 +1,9 @@
 const Admin = require('../models/adminModel')
+const bcrypt = require('bcryptjs');
 
 const defaultAdmin = async () => {
     const defaultemail = "admin@gmail.com"
-    const defaultpassword = "admin@123"
+    const defaultpassword = bcrypt.hash("admin@123",10)
 
     let exadmin =await Admin.findOne({email:defaultemail})
 
@@ -13,6 +14,7 @@ const defaultAdmin = async () => {
        })
 
        newAdmin.save();
+       console.log("Default admin created.");
     }
     else{
         console.log("Default admin already exist");
@@ -28,10 +30,11 @@ const adminLogin = async (req,res) => {
      if(!email){
         res.json({message:"Admin not found"})
      }
-     const passmatch = await Admin.comparePassword(password)
+     const passmatch = await bcrypt.compare(password, admin.password);
      if(!passmatch){
         res.json({message:"Invalid password"})
      }
+     res.json({ message: "Login successful", email: admin.email });
 }
 
 module.exports = {
