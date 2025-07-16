@@ -1,19 +1,20 @@
 const Admin = require('../models/adminModel')
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 
 const defaultAdmin = async () => {
     const defaultemail = "admin@gmail.com"
-    const defaultpassword = bcrypt.hash("admin@123",10)
+    const defaultpassword = "admin@123"
 
     let exadmin =await Admin.findOne({email:defaultemail})
 
     if(!exadmin){
+        const hashedPassword = await bcrypt.hash(defaultpassword, 10);
        let newAdmin = new Admin({
         email:defaultemail,
-        password:defaultpassword
+        password:hashedPassword
        })
 
-       newAdmin.save();
+       await newAdmin.save();
        console.log("Default admin created.");
     }
     else{
