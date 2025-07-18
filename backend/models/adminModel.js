@@ -1,8 +1,8 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
 const adminSchema = new mongoose.Schema({
-    email:String,
-    password:String
-})
+  email: String,
+  password: String // hashed password
+});
 
-module.exports = mongoose.model('Admin',adminSchema)
+module.exports = mongoose.model('Admin', adminSchema);
