@@ -1,11 +1,36 @@
-import React from 'react'
+import React, { useEffect } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Adminpage = () => {
-  return (
-    <>
-     <h1 className='text-3xl font-bold'>This is Admin page</h1>
-    </>
-  )
-}
+  const navigate = useNavigate();
 
-export default Adminpage
+  useEffect(() => {
+    const token = localStorage.getItem('admintoken');
+    if (!token) {
+      navigate('/adminlogin');
+      return;
+    }
+
+    axios.get('http://localhost:3333/api/adminpage', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then((res) => {
+      console.log(res.data);
+    })
+    .catch((err) => {
+      console.log("Unauthorized or Token Invalid");
+      navigate('/adminlogin');
+    });
+  }, []);
+
+  return (
+    <div>
+      <h1>this is admin page</h1>
+    </div>
+  );
+};
+
+export default Adminpage;

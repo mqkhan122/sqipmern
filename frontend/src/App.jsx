@@ -5,6 +5,8 @@ import Footer from './Components/Footer';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import Adminlogin from './Components/Adminlogin';
 import Adminpage from './Components/Adminpage';
+import ProtectedRoute from './Components/ProtectedRoute';
+
 
 const App = () => {
   const location = useLocation();
@@ -17,7 +19,7 @@ const App = () => {
       <Routes>
         <Route index element={<Main />} />
         <Route path="/admin" element={<Adminlogin />} />
-        <Route path="/adminpage" element={<Adminpage />} />
+        <Route path="/adminpage" element={ <ProtectedRoute> <Adminpage /> </ProtectedRoute>} />
       </Routes>
 
       {!hideLayout && <Footer />}

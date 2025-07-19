@@ -8,29 +8,23 @@ const Adminlogin = () => {
   let [message,setErrorMsg] = useState('')
  let navigator =  useNavigate()
 
- const finalsubmit = async (e) => {
+ function finalsubmit(e) {
   e.preventDefault();
-  console.log("working");
-
-  try {
-    console.log("Sending axios request...");
-    let res = await axios.post('http://localhost:3333/api/adminlogin', { email, password });
-    console.log("Axios response:", res.data);
-
-    if (res.data.success) {
-      alert("login success");
-      navigator('/adminpage');
-    } else {
-      setErrorMsg(res.data.message);
-    }
-
-  } catch (err) {
-    console.error("Axios Error:", err);
-    setErrorMsg("Server error or invalid credentials");
-  }
-};
-
-  return (
+  axios.post('http://localhost:3333/api/adminlogin', { email, password })
+    .then(res => {
+      if (res.data.success) {
+        localStorage.setItem("admintoken", res.data.token); // ✅ Save token
+        alert("Login successful");
+        navigator("/adminpage"); // ✅ Navigate only after token stored
+      } else {
+        alert(res.data.message);
+      }
+    })
+    .catch(err => {
+      console.error(err);
+    });
+}
+ return (
     <> 
     
     

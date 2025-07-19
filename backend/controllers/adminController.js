@@ -1,6 +1,7 @@
 // controllers/adminController.js
 const Admin = require('../models/adminModel');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken')
 
 // ✅ Default Admin Creator
 const createDefaultAdmin = async () => {
@@ -35,8 +36,17 @@ const adminLogin = async (req, res) => {
     const passMatch = await bcrypt.compare(password, admin.password);
     if (!passMatch) return res.json({ success: false, message: "Invalid password" });
 
-    console.log("✅ Admin logged in successfully");
-    res.json({ success: true, message: "Login successful", email: admin.email });
+    console.log("Admin logged in successfully");
+    const token = jwt.sign({ id: admin._id }, "secretKey", {
+    expiresIn: "3m", // 1 din ke liye token valid
+    });
+
+    res.json({
+      success: true,
+      message: "Login successful",
+      token,
+    });
+    
   } catch (error) {
     console.log("❌ Login error:", error.message);
     res.status(500).json({ success: false, message: "Internal server error" });
