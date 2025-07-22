@@ -1,27 +1,51 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode'; // ✅ Correct import
+import { jwtDecode } from 'jwt-decode';
 
 const ProtectedRoute = ({ children }) => {
-  const token = localStorage.getItem("admintoken");
+  const [isAuthorized, setIsAuthorized] = useState(null);
 
-  if (!token) {
-    return <Navigate to="/adminlogin" replace />;
+  useEffect(() => {
+    const checkToken = () => {
+      const token = localStorage.getItem("admintoken");
+
+      if (!token) {
+        setIsAuthorized(false);
+        return;
+      }
+
+      try {
+        const decoded = jwtDecode(token);
+        if (decoded.exp * 1000 < Date.now()) {
+          localStorage.removeItem("admintoken");
+          setIsAuthorized(false);
+        } else {
+          setIsAuthorized(true);
+        }
+      } catch (err) {
+        setIsAuthorized(false);
+      }
+    };
+
+    checkToken();
+
+    // Optional: check every time page gains focus
+    window.addEventListener("focus", checkToken);
+
+    return () => {
+      window.removeEventListener("focus", checkToken);
+    };
+  }, []);
+
+  if (isAuthorized === null) {
+    return <p>Loading...</p>;
   }
 
-  try {
-    const decoded = jwtDecode(token);
-
-    // Optional: Token expiry check
-    if (decoded.exp * 1000 < Date.now()) {
-      localStorage.removeItem("admintoken");
-      return <Navigate to="/adminlogin" replace />;
-    }
-
-    return children;
-  } catch (err) {
-    return <Navigate to="/adminlogin" replace />;
+  if (!isAuthorized) {
+    return <Navigate to="/admin" replace />;
   }
+
+  return children;
 };
 
 export default ProtectedRoute;

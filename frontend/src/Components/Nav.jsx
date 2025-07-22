@@ -3,7 +3,10 @@ import '../App.css'
 import logo from '../assets/pngwing.com (1).png'
 import { GiHamburgerMenu } from "react-icons/gi";
 import { IoServerOutline } from "react-icons/io5";
+import { FaUser } from "react-icons/fa";
+import { useNavigate } from 'react-router-dom';
 const Nav = () => {
+    let navigator = useNavigate()
   return (
     <>
     <input type="checkbox" id='click' />
@@ -26,6 +29,7 @@ const Nav = () => {
             <label htmlFor="click">
                 <GiHamburgerMenu className='w-9 bg-gray-200 h-9 p-2 rounded-2xl' />
             </label>
+            <FaUser className='w-9 bg-gray-200 h-9 p-2 rounded-2xl' onClick={()=>navigator('/usersign')} />
         </div>
      </section>
     </>

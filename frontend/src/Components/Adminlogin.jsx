@@ -10,7 +10,7 @@ const Adminlogin = () => {
 
  function finalsubmit(e) {
   e.preventDefault();
-  axios.post('http://localhost:3333/api/adminlogin', { email, password })
+  axios.post('http://localhost:3333/api/login', { email, password })
     .then(res => {
       if (res.data.success) {
         localStorage.setItem("admintoken", res.data.token); // ✅ Save token

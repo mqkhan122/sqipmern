@@ -1,12 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const { adminLogin } = require('../controllers/adminController');
-const authAdmin = require('../middleware/adminAuth')
+const { registerUser, loginUser } = require('../controllers/userController');
 
-router.post('/adminlogin', adminLogin);
-
-router.get("/adminpage", authAdmin, (req, res) => {
-  res.json({ success: true, message: "Welcome Admin!" });
-});
+router.post('/register', registerUser);
+router.post('/login', loginUser);
 
 module.exports = router;
