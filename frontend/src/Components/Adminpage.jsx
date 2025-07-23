@@ -8,7 +8,7 @@ const Adminpage = () => {
   useEffect(() => {
     const token = localStorage.getItem('admintoken');
     if (!token) {
-      navigate('/adminlogin');
+      navigate('/admin');
       return;
     }
 
@@ -22,7 +22,7 @@ const Adminpage = () => {
     })
     .catch((err) => {
       console.log("Unauthorized or Token Invalid");
-      navigate('/adminlogin');
+      navigate('/admin');
     });
   }, []);
 

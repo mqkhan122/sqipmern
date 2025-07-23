@@ -59,7 +59,7 @@
 //  ========================================================
 
 // controllers/authController.js
-const User = require("../models/User"); // 👈 use only one model
+const User = require("../models/adminModel"); // 👈 use only one model
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
@@ -122,7 +122,39 @@ const login = async (req, res) => {
   }
 };
 
+
+const register = async (req, res) => {
+  const { name, email, password } = req.body;
+
+  try {
+    const existingUser = await User.findOne({ email });
+    if (existingUser) return res.json({ success: false, message: "User already exists" });
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newUser = new User({
+      name,
+      email,
+      password: hashedPassword,
+      role: "user", // 👈 default role
+    });
+
+    await newUser.save();
+
+    res.status(201).json({
+      success: true,
+      message: "User registered successfully",
+    });
+  } catch (err) {
+    console.error("❌ Registration error:", err.message);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
+
+
 module.exports = {
   createDefaultAdmin,
   login,
+  register
 };

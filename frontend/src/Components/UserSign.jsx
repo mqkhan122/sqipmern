@@ -41,7 +41,7 @@ const UserSignup = () => {
 
       if (res.data.success) {
         alert("User Registered Successfully");
-        navigate("/login");
+        navigate("/admin");
       } else {
         alert(res.data.message || "Registration Failed");
       }
