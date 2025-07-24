@@ -97,30 +97,40 @@ const login = async (req, res) => {
 
   try {
     const user = await User.findOne({ email });
-    if (!user) return res.json({ success: false, message: "User not found" });
+    if (!user) {
+      return res.json({ success: false, message: "User not found" });
+    }
 
     const passMatch = await bcrypt.compare(password, user.password);
-    if (!passMatch) return res.json({ success: false, message: "Invalid password" });
+    if (!passMatch) {
+      return res.json({ success: false, message: "Invalid password" });
+    }
 
     const token = jwt.sign(
       { id: user._id, role: user.role },
-      "secretKey", // 🔒 replace with process.env.JWT_SECRET in real app
+      "secretKey",
       { expiresIn: "1d" }
     );
 
     console.log(`${user.role} logged in successfully`);
+
+    // 👇 Send different redirect paths based on role
+    const redirectTo = user.role === "admin" ? "/adminpage" : "/userdashboard";
+
     res.json({
       success: true,
       message: "Login successful",
       token,
       role: user.role,
       name: user.name,
+      redirectTo, // 👈 Send this to frontend for redirection
     });
   } catch (error) {
     console.log("❌ Login error:", error.message);
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
+
 
 
 const register = async (req, res) => {

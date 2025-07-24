@@ -14,6 +14,7 @@ const Adminlogin = () => {
     .then(res => {
       if (res.data.success) {
         localStorage.setItem("admintoken", res.data.token); // ✅ Save token
+        localStorage.setItem("role", res.data.role);
         alert("Login successful");
         navigator("/adminpage"); // ✅ Navigate only after token stored
       } else {
