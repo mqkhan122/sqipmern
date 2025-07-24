@@ -12,18 +12,18 @@ const Adminpage = () => {
       return;
     }
 
-    axios.get('http://localhost:3333/api/adminpage', {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-    .then((res) => {
-      console.log(res.data);
-    })
-    .catch((err) => {
-      console.log("Unauthorized or Token Invalid");
-      navigate('/admin');
-    });
+    // axios.get('http://localhost:3333/api/adminpage', {
+    //   headers: {
+    //     Authorization: `Bearer ${token}`,
+    //   },
+    // })
+    // .then((res) => {
+    //   console.log(res.data);
+    // })
+    // .catch((err) => {
+    //   console.log("Unauthorized or Token Invalid");
+    //   navigate('/admin');
+    // });
   }, []);
 
   return (
