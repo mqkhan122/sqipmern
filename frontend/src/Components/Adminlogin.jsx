@@ -30,7 +30,7 @@ const Adminlogin = () => {
     
     
      <section className='h-100  flex flex-col leading-8.5 justify-center items-center'>
-        <h1 className='text-3xl font-semibold text-center'>Admin Login </h1>
+        <h1 className='text-3xl font-semibold text-center'>Login</h1>
 
          {message && (
           <p className='text-red-500 mb-3'>{message}</p>
