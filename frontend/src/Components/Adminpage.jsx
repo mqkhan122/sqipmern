@@ -1,3 +1,6 @@
+
+
+
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -8,26 +11,35 @@ const Adminpage = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem('admintoken');
+    const token = localStorage.getItem('token');
     if (!token) {
       navigate('/admin');
       return;
     }
 
     axios.get('http://localhost:3333/api/adminpage', {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+     headers: {
+  Authorization: `Bearer ${token}`,
+   },
+
     })
-    .then((res) => {
-      setRole(res.data.role); // backend must return role
-      setLoading(false);
-    })
-    .catch((err) => {
-      console.log("Unauthorized or Token Invalid");
-      navigate('/admin');
-    });
+
+
+      .then((res) => {
+        setRole(res.data.role); // Make sure your backend returns role
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.log("Unauthorized or Token Invalid",err);
+        setLoading(false);
+        navigate('/admin');
+      });
   }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    navigate('/admin');
+  };
 
   if (loading) return <p className="p-6">Loading...</p>;
 
@@ -37,20 +49,27 @@ const Adminpage = () => {
       <aside className="w-64 bg-white shadow-md p-4">
         <h2 className="text-xl font-bold mb-6">{role === 'admin' ? 'Admin Panel' : 'User Panel'}</h2>
         <ul className="space-y-4">
-          <li><a href="#" className="text-gray-700 hover:text-blue-600">Dashboard</a></li>
+          <li><button className="text-left w-full text-gray-700 hover:text-blue-600">Dashboard</button></li>
+
           {role === 'admin' && (
             <>
-              <li><a href="#" className="text-gray-700 hover:text-blue-600">Users</a></li>
-              <li><a href="#" className="text-gray-700 hover:text-blue-600">Settings</a></li>
+              <li><button className="text-left w-full text-gray-700 hover:text-blue-600">Users</button></li>
+              <li><button className="text-left w-full text-gray-700 hover:text-blue-600">Settings</button></li>
             </>
           )}
+
           {role === 'user' && (
             <>
-              <li><a href="#" className="text-gray-700 hover:text-blue-600">My Profile</a></li>
-              <li><a href="#" className="text-gray-700 hover:text-blue-600">Support</a></li>
+              <li><button className="text-left w-full text-gray-700 hover:text-blue-600">My Profile</button></li>
+              <li><button className="text-left w-full text-gray-700 hover:text-blue-600">Support</button></li>
             </>
           )}
-          <li><a href="#" className="text-gray-700 hover:text-red-600">Logout</a></li>
+
+          <li>
+            <button onClick={handleLogout} className="text-left w-full text-red-600 hover:underline">
+              Logout
+            </button>
+          </li>
         </ul>
       </aside>
 

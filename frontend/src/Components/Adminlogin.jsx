@@ -1,62 +1,85 @@
-import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
+
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const Adminlogin = () => {
-  let [email,setEmail] = useState('')
-  let [password,setPassword] = useState('')
-  let [message,setErrorMsg] = useState('')
- let navigator =  useNavigate()
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [message, setErrorMsg] = useState('');
+  const navigate = useNavigate();
 
- function finalsubmit(e) {
-  e.preventDefault();
-  axios.post('http://localhost:3333/api/login', { email, password })
-    .then(res => {
+  const finalsubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const res = await axios.post('http://localhost:3333/api/login', { email, password });
+
       if (res.data.success) {
-        localStorage.setItem("admintoken", res.data.token); // ✅ Save token
-        localStorage.setItem("role", res.data.role);
+        const { token, role } = res.data;
+
+        // ✅ Save to localStorage
+        localStorage.setItem("token", token);
+        localStorage.setItem("role", role);
+
         alert("Login successful");
-        navigator("/adminpage"); // ✅ Navigate only after token stored
+
+        // ✅ Redirect based on role
+        if (role === "admin") {
+          navigate("/adminpage");
+        } else if (role === "user") {
+          navigate("/adminpage"); // Same page, you can customize UI inside
+        } else {
+          alert("Unknown role detected");
+        }
       } else {
-        alert(res.data.message);
+        setErrorMsg(res.data.message || "Invalid credentials");
       }
-    })
-    .catch(err => {
+
+    } catch (err) {
       console.error(err);
-    });
-}
- return (
-    <> 
-    
-    
-     <section className='h-100  flex flex-col leading-8.5 justify-center items-center'>
-        <h1 className='text-3xl font-semibold text-center'>Login</h1>
+      setErrorMsg("Login failed. Try again.");
+    }
+  };
 
-         {message && (
-          <p className='text-red-500 mb-3'>{message}</p>
-        )}
+  return (
+    <section className='h-100 flex flex-col justify-center items-center'>
+      <h1 className='text-3xl font-semibold text-center'>Login</h1>
 
+      {message && (
+        <p className='text-red-500 mb-3'>{message}</p>
+      )}
 
-        <form action="" onSubmit={finalsubmit}>
-            <div>
-            <label htmlFor="">Email</label> <br />
-            <input type="text"  onChange={(e)=>setEmail(e.target.value)}  className='border rounded  w-100 px-1' placeholder='Enter Admin Email' /> 
-            </div>
+      <form onSubmit={finalsubmit} className='w-80'>
+        <div className='mb-4'>
+          <label>Email</label>
+          <input
+            type="text"
+            onChange={(e) => setEmail(e.target.value)}
+            className='border rounded w-full px-2 py-1'
+            placeholder='Enter Email'
+          />
+        </div>
 
-              <div>
-            <label htmlFor="">Password</label> <br />
-            <input type="password"  onChange={(e)=>setPassword(e.target.value)} className='border rounded  w-100 px-1' placeholder='Enter Admin Password' /> 
-            </div>
+        <div className='mb-4'>
+          <label>Password</label>
+          <input
+            type="password"
+            onChange={(e) => setPassword(e.target.value)}
+            className='border rounded w-full px-2 py-1'
+            placeholder='Enter Password'
+          />
+        </div>
 
-              <div>
-            
-            <button className='border rounded  w-100 mt-3 bg-green-400 py-1 text-white hover:bg-white hover:text-black '>Login</button> 
-            </div>
-        </form>
-     </section>
+        <button
+          type="submit"
+          className='border rounded w-full mt-3 bg-green-500 py-2 text-white hover:bg-white hover:text-black'>
+          Login
+        </button>
+      </form>
+    </section>
+  );
+};
 
-    </>
-  )
-}
+export default Adminlogin;
 
-export default Adminlogin

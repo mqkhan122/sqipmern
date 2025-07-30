@@ -21,12 +21,18 @@ const App = () => {
         <Route index element={<Main />} />
         <Route path="/admin" element={<Adminlogin />} />
         <Route path="/usersign" element={<UserSign />} />
-        <Route path="/adminpage" element={ <ProtectedRoute> <Adminpage /> </ProtectedRoute>} />
+        {/* <Route path="/adminpage" element={ <ProtectedRoute> <Adminpage /> </ProtectedRoute>} /> */}
+        <Route path="/adminpage" element={
+      <ProtectedRoute allowedRoles={["admin"]}>
+        <Adminpage />
+      </ProtectedRoute>
+    } />
+
       </Routes>
 
       {!hideLayout && <Footer />}
     </>
-  );
+  );  
 };
 
 export default App;
