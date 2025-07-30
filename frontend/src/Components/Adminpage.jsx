@@ -1,6 +1,3 @@
-
-
-
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -11,30 +8,31 @@ const Adminpage = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      navigate('/admin');
-      return;
-    }
-
-    axios.get('http://localhost:3333/api/adminpage', {
-     headers: {
-  Authorization: `Bearer ${token}`,
-   },
-
-    })
-
-
-      .then((res) => {
-        setRole(res.data.role); // Make sure your backend returns role
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.log("Unauthorized or Token Invalid",err);
-        setLoading(false);
+    const fetchDashboard = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) {
         navigate('/admin');
-      });
-  }, []);
+        return;
+      }
+
+      try {
+        const response = await axios.get('http://localhost:3333/api/adminpage', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        setRole(response.data.role); // Expecting: { role: 'admin' } or { role: 'user' }
+        setLoading(false);
+      } catch (error) {
+        console.error("Unauthorized or Token Invalid", error);
+        localStorage.removeItem('token');
+        navigate('/admin');
+      }
+    };
+
+    fetchDashboard();
+  }, [navigate]);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
