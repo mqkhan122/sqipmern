@@ -8,6 +8,8 @@ import Adminlogin from './Components/Adminlogin';
 import ProtectedRoute from './Components/ProtectedRoute';
 import UserSign from './Components/UserSign';
 import Adminpage from './Components/Adminpage';
+import CreateRole from './Components/pages/CreateRole';
+
 
 
 const App = () => {
@@ -28,9 +30,8 @@ const App = () => {
        <ProtectedRoute allowedRoles={["admin", "user"]}>
            <Adminpage />
        </ProtectedRoute>
-      
     } />
-
+      
       </Routes>
 
       {!hideLayout && <Footer />}
