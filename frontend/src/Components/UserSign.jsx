@@ -39,9 +39,12 @@ const UserSignup = () => {
         role: "user",
       });
 
-      if (res.data.success) {
-        alert("User Registered Successfully");
+      if(res.data.success) {
         navigate("/admin");
+        alert("User Registered Successfully");
+        console.log("navigate");
+        
+        
       } else {
         alert(res.data.message || "Registration Failed");
       }
