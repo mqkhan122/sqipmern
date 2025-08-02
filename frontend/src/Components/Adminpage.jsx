@@ -1,5 +1,4 @@
 
-
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -12,6 +11,30 @@ const Adminpage = () => {
   const [showCreateRoleForm, setShowCreateRoleForm] = useState(false); // ✅ New state
   const [showAssignRole, setShowAssignRole] = useState(false);
   const [showTotalRoles, setShowTotalRoles] = useState(false);
+  const [frmdata, setfrmdata] = useState({ roleName: "" });
+
+const handleinput = (e) => {
+  setfrmdata({ ...frmdata, [e.target.name]: e.target.value });
+};
+
+
+const finalsubmit = async (e) => {
+  e.preventDefault();
+  try {
+    console.log("Sending to API:", frmdata);
+
+    await axios.post("http://localhost:3333/api/roles", frmdata, {
+      headers: { 'Content-Type': 'application/json' }
+    });
+    alert("Role created successfully");
+  } catch (error) {
+    console.error("Error:", error.response?.data || error.message);
+    alert("Error found");
+  }
+};
+
+
+
 
 
   useEffect(() => {
@@ -228,17 +251,7 @@ const Adminpage = () => {
               </button>
             </div>
 
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                const roleName = e.target.roleName.value.trim();
-                if (roleName) {
-                  console.log("Creating Role:", roleName);
-                  // ➕ Send API POST request if needed here
-                  setShowCreateRoleForm(false);
-                }
-              }}
-            >
+            <form onSubmit={finalsubmit}>
               <div className="mb-4">
                 <label htmlFor="roleName" className="block font-medium mb-1">
                   Role Name
@@ -247,6 +260,7 @@ const Adminpage = () => {
                   type="text"
                   name="roleName"
                   id="roleName"
+                  onChange={handleinput}
                   className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-400"
                   required
                 />
