@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const Adminpage = () => {
   const navigate = useNavigate();
@@ -20,12 +21,13 @@ const handleinput = (e) => {
 const finalsubmit = async (e) => {
   e.preventDefault();
   try {
-    console.log("Sending to API:", frmdata);
+    
 
     await axios.post("http://localhost:3333/api/roles", frmdata, {
       headers: { 'Content-Type': 'application/json' }
     });
-    alert("Role created successfully");
+    toast.success("Role created successfully")
+    // alert("Role created successfully");
   } catch (error) {
     console.error("Error:", error.response?.data || error.message);
     alert("Error found");
